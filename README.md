@@ -1,75 +1,39 @@
-# Pacman Search Project
+# Decision Trees and Nearest Neighbors
 
-**Course:** CAI 4002 — University of South Florida  
-**Student:** Syed Abdullah M J Shah (U25670034)
+
 
 ---
 
 ## Overview
 
-This project implements general-purpose search algorithms and applies them to Pacman navigation problems. The goal is for Pacman to find paths through mazes efficiently — reaching a target location, visiting all corners, or collecting all food.
+This notebook implements and evaluates decision tree and K-nearest neighbors classifiers on two datasets: the UCI forest fires dataset and the Titanic survival dataset. It covers data preprocessing, model training, evaluation metrics, handling class imbalance, and feature importance analysis.
 
 ---
 
-## Files Modified
+## Contents
 
-### search.py
-Implements four search algorithms:
-
-- **DFS** — Depth-first search using a LIFO stack. Explores deepest nodes first. Not guaranteed to find the shortest path.
-- **BFS** — Breadth-first search using a FIFO queue. Guarantees the fewest-actions path.
-- **UCS** — Uniform-cost search using a priority queue keyed by total path cost. Guarantees the least-cost path.
-- **A\*** — A* search using a priority queue keyed by `g(n) + h(n)`, where `g` is the path cost and `h` is a heuristic estimate. Guarantees optimal path when the heuristic is consistent.
-
-All four algorithms use graph search (visited state tracking) to avoid re-expanding already-seen states.
-
-### searchAgents.py
-Implements search problems and heuristics:
-
-- **CornersProblem (Q5)** — State is `(position, visited_corners_tuple)` where the tuple tracks which of the four corners have been reached. Goal is when all four booleans are True.
-
-- **corners_heuristic (Q6)** — Computes the Manhattan distance to the nearest unvisited corner plus the MST cost over all unvisited corners. Consistent and admissible.
-
-- **food_heuristic (Q7)** — Computes the real maze distance to the nearest food plus the MST cost over all remaining food positions using cached BFS distances. Consistent and admissible. Expands ~255 nodes on trickySearch (extra credit tier).
-
-- **AnyFoodSearchProblem (Q8)** — Goal test returns True if there is food at the current position.
-
-- **path_to_closest_dot (Q8)** — Runs BFS on AnyFoodSearchProblem to find the shortest path to the nearest food dot.
+- **Decision tree classifier** trained on the forest fires dataset, including a balanced variant to address class imbalance.
+- **K-nearest neighbors classifier**, with circular encoding of month and day features (split into real and imaginary components since KNN cannot operate on complex numbers directly).
+- **Evaluation metrics** including accuracy and F1 score, with discussion of how class imbalance affects each.
+- **Titanic decision tree (extra credit)** with feature importance analysis and a visualized decision tree.
 
 ---
 
-## Engineering Process
+## Documented Fixes
 
-The main implementation challenge was that the `util.py` in this project uses renamed data structures compared to the standard Berkeley version: `LIFO` instead of `Stack`, `FIFO` instead of `Queue`, and `.put()`/`.get()`/`.is_empty()` instead of `.push()`/`.pop()`/`.isEmpty()`. The search algorithms were written to match these names.
+This notebook was inherited in a broken state. The following issues were identified and fixed:
 
-For the heuristics, an initial MST approach that included the current position as a node was found to be inconsistent — taking one step could reduce the heuristic by more than 1, violating the consistency condition `h(s) ≤ cost(s→s') + h(s')`. The fix was to separate the heuristic into two parts: distance from the current position to the nearest goal node, plus the MST cost over only the goal nodes themselves. This ensures each step reduces the heuristic by at most 1.
-
-The food heuristic uses actual maze distances (computed via BFS) rather than Manhattan distances to get a tighter lower bound, which significantly reduces the number of nodes A* needs to expand.
+1. **KNN imports** — removed `from sklearn.externals.six import StringIO`, `pydotplus`, `export_graphviz`, `mpimg`, and `mpatches`. The `sklearn.externals.six` module no longer exists in modern scikit-learn, and none of these imports were actually used by the KNN code.
+2. **Bar plot** — the seaborn barplot for class distribution was commented out and broken. Rewrote it so the plot renders correctly.
+3. **KNN data and target** — the original code trained KNN on `df`, silently discarding the circular month/day encoding done in `knn_df`. Fixed to use `knn_df`, splitting the complex-valued `months_comp` and `days_comp` columns into real and imaginary parts.
+4. **Model verification** — reran every section after each fix to confirm the decision tree, KNN, balanced decision tree, evaluation metrics, and extra credit all execute without errors.
+5. **Notebook completion** — reviewed outputs for consistency and completed the required written discussion cells based on the generated results.
 
 ---
 
-## AI Use
+## Key Findings
 
-I used AI assistance to help understand project instructions and debug general concepts. The final code implementation was written, tested, and verified by me. AI was also used to help improve the formatting and presentation of this README after I wrote an initial draft.
+- On the forest fires dataset, class imbalance causes a noticeable gap between accuracy and F1 score, since the model can score well on accuracy while performing poorly on the minority class.
+- On the Titanic dataset, **Sex** is the most important feature (importance ≈ 0.61), consistent with the "women and children first" evacuation pattern. Passenger class and age contribute less. The Titanic model's F1 score is much closer to its accuracy than the forest fires model, indicating a more balanced dataset.
 
-
-## Autograder Results
-
-Provisional grades
-==================
-Question q1: 3/3 
-Question q2: 3/3 
-Question q3: 3/3 
-Question q4: 3/3 
-Question q5: 3/3 
-Question q6: 3/3 
-Question q7: 5/4 
-Question q8: 3/3 
-------------------
-Total: 26/25
-
-Your grades are NOT yet registered.  To register your grades, make sure
-to follow your instructor's guidelines to receive credit on your project.
-
-Abdullahs-MacBook-Pro:search-2 abdullahshah$ 
-
+---
