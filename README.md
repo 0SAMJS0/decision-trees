@@ -1,9 +1,8 @@
 # Pacman Search Project
 
-**Course:** CAI 4002 — University of South Florida  
-**Student:** Syed Abdullah M J Shah (U25670034)
 
----
+
+
 
 ## Overview
 
@@ -23,19 +22,6 @@ Implements four search algorithms:
 
 All four algorithms use graph search (visited state tracking) to avoid re-expanding already-seen states.
 
-### searchAgents.py
-Implements search problems and heuristics:
-
-- **CornersProblem (Q5)** — State is `(position, visited_corners_tuple)` where the tuple tracks which of the four corners have been reached. Goal is when all four booleans are True.
-
-- **corners_heuristic (Q6)** — Computes the Manhattan distance to the nearest unvisited corner plus the MST cost over all unvisited corners. Consistent and admissible.
-
-- **food_heuristic (Q7)** — Computes the real maze distance to the nearest food plus the MST cost over all remaining food positions using cached BFS distances. Consistent and admissible. Expands ~255 nodes on trickySearch (extra credit tier).
-
-- **AnyFoodSearchProblem (Q8)** — Goal test returns True if there is food at the current position.
-
-- **path_to_closest_dot (Q8)** — Runs BFS on AnyFoodSearchProblem to find the shortest path to the nearest food dot.
-
 ---
 
 ## Engineering Process
@@ -47,29 +33,6 @@ For the heuristics, an initial MST approach that included the current position a
 The food heuristic uses actual maze distances (computed via BFS) rather than Manhattan distances to get a tighter lower bound, which significantly reduces the number of nodes A* needs to expand.
 
 ---
-
-## AI Use
-
-I used AI assistance to help understand project instructions and debug general concepts. The final code implementation was written, tested, and verified by me. AI was also used to help improve the formatting and presentation of this README after I wrote an initial draft.
-
-
-## Autograder Results
-
-Provisional grades
-==================
-Question q1: 3/3 
-Question q2: 3/3 
-Question q3: 3/3 
-Question q4: 3/3 
-Question q5: 3/3 
-Question q6: 3/3 
-Question q7: 5/4 
-Question q8: 3/3 
-------------------
-Total: 26/25
-
-Your grades are NOT yet registered.  To register your grades, make sure
-to follow your instructor's guidelines to receive credit on your project.
 
 Abdullahs-MacBook-Pro:search-2 abdullahshah$ 
 
